@@ -189,9 +189,11 @@ export class AudioEngine {
         // Set up audio context properties if needed
       }
 
-      // Resume audio context if suspended (required by some browsers)
+      // Handle suspended audio context (required by some browsers)
+      // Don't wait for resume here - it requires user interaction
       if (this.audioContext.state === 'suspended') {
-        await this.audioContext.resume();
+        this.logger.warn('Audio context is suspended - will resume after user interaction');
+        // Don't block initialization - audio will work after user clicks/interacts
       }
 
       this.isInitialized = true;
@@ -201,6 +203,20 @@ export class AudioEngine {
     } catch (error) {
       this.logger.error('Failed to initialize audio engine:', error);
       throw error;
+    }
+  }
+
+  /**
+   * Resume audio context (call after user interaction)
+   */
+  async resumeContext(): Promise<void> {
+    if (this.audioContext && this.audioContext.state === 'suspended') {
+      try {
+        await this.audioContext.resume();
+        this.logger.info('Audio context resumed');
+      } catch (error) {
+        this.logger.error('Failed to resume audio context:', error);
+      }
     }
   }
 

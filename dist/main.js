@@ -33241,7 +33241,7 @@ class AudioEngine {
       const listenerContext = this.listener.context || this.audioContext;
       if (listenerContext) {}
       if (this.audioContext.state === "suspended") {
-        await this.audioContext.resume();
+        this.logger.warn("Audio context is suspended - will resume after user interaction");
       }
       this.isInitialized = true;
       this.logger.info("Audio engine initialized");
@@ -33249,6 +33249,16 @@ class AudioEngine {
     } catch (error2) {
       this.logger.error("Failed to initialize audio engine:", error2);
       throw error2;
+    }
+  }
+  async resumeContext() {
+    if (this.audioContext && this.audioContext.state === "suspended") {
+      try {
+        await this.audioContext.resume();
+        this.logger.info("Audio context resumed");
+      } catch (error2) {
+        this.logger.error("Failed to resume audio context:", error2);
+      }
     }
   }
   async loadSound(name, url, config = {}) {
