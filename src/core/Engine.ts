@@ -201,6 +201,7 @@ export class Engine {
       throw new Error('Renderer must be initialized before input');
     }
     this.inputManager = new InputManager(this.renderer.domElement, this.logger);
+    this.inputManager.initialize();
     this.logger.debug('Input manager initialized');
   }
 

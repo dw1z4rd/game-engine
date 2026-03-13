@@ -255,8 +255,8 @@ export class BasicExample {
       name: 'orbit_camera',
       type: 'mouse',
       inputs: ['button0'],
-      callback: (event) => {
-        if (event.type === 'mousedown') {
+      callback: (inputEvent) => {
+        if (inputEvent.data && inputEvent.data.type === 'mousedown') {
           this.input.setCursorLock(true);
         }
       }

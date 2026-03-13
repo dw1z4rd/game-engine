@@ -34736,6 +34736,7 @@ class Engine {
       throw new Error("Renderer must be initialized before input");
     }
     this.inputManager = new InputManager(this.renderer.domElement, this.logger);
+    this.inputManager.initialize();
     this.logger.debug("Input manager initialized");
   }
   async initializePhysics() {
@@ -34943,8 +34944,8 @@ class BasicExample {
       name: "orbit_camera",
       type: "mouse",
       inputs: ["button0"],
-      callback: (event) => {
-        if (event.type === "mousedown") {
+      callback: (inputEvent) => {
+        if (inputEvent.data && inputEvent.data.type === "mousedown") {
           this.input.setCursorLock(true);
         }
       }
