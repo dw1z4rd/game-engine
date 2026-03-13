@@ -34800,6 +34800,7 @@ class BasicExample {
     this.engine = engine;
   }
   async initialize() {
+    console.log("\uD83C\uDFAE Initializing BasicExample...");
     const { scene, renderer, input, physics, ecs, ui } = this.engine.systems;
     this.scene = scene;
     this.renderer = renderer;
@@ -34807,21 +34808,20 @@ class BasicExample {
     this.physics = physics;
     this.ecs = ecs;
     this.ui = ui;
+    console.log("\uD83D\uDCCA Creating HUD...");
     ui.createHUD();
+    console.log("\uD83D\uDCF7 Setting up camera...");
     this.setupCamera();
+    console.log("\uD83D\uDCA1 Setting up lighting...");
     this.setupLighting();
+    console.log("\uD83C\uDFAF Creating scene objects...");
     await this.createSceneObjects();
+    console.log("⌨️ Setting up input handling...");
     this.setupInput();
+    console.log("\uD83E\uDDE9 Creating ECS entities...");
     this.createECSEntities();
-    console.log("Basic example initialized");
-    this.engine.systems.time.start();
-    this.update();
-  }
-  update() {
-    const { time, ui, scene } = this.engine.systems;
-    ui.updateHUD(time.fps);
-    scene.update();
-    requestAnimationFrame(() => this.update());
+    console.log("✅ Basic example initialized");
+    console.log("\uD83D\uDCDD Note: HUD and scene updates will be handled by the main engine game loop");
   }
   setupCamera() {
     const { scene } = this.engine.systems;
@@ -34986,6 +34986,8 @@ class BasicExample {
       if (this.cube) {
         this.ecs.addComponent(entity.id, new VisualComponent(this.cube.object3D));
       }
+    }).catch((error2) => {
+      console.warn("⚠️ Failed to load ECS components:", error2);
     });
   }
   moveCamera(x, y, z) {
@@ -35007,32 +35009,78 @@ class BasicExample {
 
 // src/main.ts
 async function main() {
+  console.log("\uD83D\uDE80 Starting game engine initialization...");
+  updateLoadingMessage("Initializing Engine...");
   try {
+    const canvasElement = document.getElementById("gameCanvas");
+    if (!canvasElement) {
+      throw new Error('Canvas element not found. Make sure there is an element with id="gameCanvas"');
+    }
+    console.log("✅ Canvas element found");
+    console.log("\uD83D\uDD27 Creating engine instance...");
+    updateLoadingMessage("Creating Engine...");
     const engine = new Engine({
-      canvas: document.getElementById("gameCanvas"),
+      canvas: canvasElement,
       enablePhysics: true,
       enableAudio: true,
       enableNetworking: false
     });
-    await engine.initialize();
+    console.log("✅ Engine instance created");
+    console.log("⚙️ Initializing engine systems...");
+    updateLoadingMessage("Initializing Systems...");
+    const initTimeout = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error("Engine initialization timeout after 10 seconds")), 1e4);
+    });
+    await Promise.race([engine.initialize(), initTimeout]);
+    console.log("✅ Engine initialized successfully");
+    console.log("\uD83C\uDFAE Creating basic example...");
+    updateLoadingMessage("Loading Example...");
     const example = new BasicExample(engine);
-    await example.initialize();
+    console.log("\uD83D\uDD27 Initializing example...");
+    updateLoadingMessage("Initializing Example...");
+    const exampleInitTimeout = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error("Example initialization timeout after 5 seconds")), 5000);
+    });
+    await Promise.race([example.initialize(), exampleInitTimeout]);
+    console.log("✅ Example initialized successfully");
+    console.log("\uD83C\uDFAF Hiding loading screen...");
     const loadingElement = document.getElementById("loading");
     if (loadingElement) {
       loadingElement.style.display = "none";
+      console.log("✅ Loading screen hidden");
     }
+    console.log("\uD83C\uDFAC Starting game loop...");
     engine.start();
+    console.log("\uD83C\uDF89 Game engine started successfully!");
     window.addEventListener("beforeunload", () => {
+      console.log("\uD83E\uDDF9 Cleaning up engine...");
       engine.dispose();
     });
   } catch (error2) {
-    console.error("Failed to initialize game engine:", error2);
+    console.error("❌ Failed to initialize game engine:", error2);
+    console.error("Error details:", {
+      name: error2.name,
+      message: error2.message,
+      stack: error2.stack
+    });
     const loadingElement = document.getElementById("loading");
     if (loadingElement) {
-      loadingElement.textContent = "Failed to load game engine. Check console for details.";
+      loadingElement.textContent = `Failed to load: ${error2.message}. Check console for details.`;
       loadingElement.style.color = "#ff4444";
+      loadingElement.style.fontSize = "18px";
+      loadingElement.style.textAlign = "center";
+      loadingElement.style.maxWidth = "80%";
     }
   }
+}
+function updateLoadingMessage(message) {
+  const loadingElement = document.getElementById("loading");
+  if (loadingElement) {
+    loadingElement.textContent = message;
+    loadingElement.style.fontSize = "20px";
+    loadingElement.style.textAlign = "center";
+  }
+  console.log(`\uD83D\uDCCB Loading: ${message}`);
 }
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", main);
