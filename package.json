@@ -1,0 +1,27 @@
+{
+  "name": "game-engine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "bun build src/main.ts --outdir dist --target browser && bun server.js",
+    "build": "bun build src/main.ts --outdir dist --target browser",
+    "build:strict": "tsc && bun build src/main.ts --outdir dist --target browser",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@types/node": "^25.5.0",
+    "cannon-es": "^0.20.0",
+    "three": "^0.183.2",
+    "typescript": "^5.9.3",
+    "ws": "^8.19.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.183.1",
+    "@types/ws": "^8.18.1"
+  }
+}
