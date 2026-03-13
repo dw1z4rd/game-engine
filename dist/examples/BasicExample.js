@@ -13,6 +13,7 @@ export class BasicExample {
      * Initialize the example
      */
     async initialize() {
+        console.log('🎮 Initializing BasicExample...');
         // Assign systems to class properties
         const { scene, renderer, input, physics, ecs, ui } = this.engine.systems;
         this.scene = scene;
@@ -22,30 +23,25 @@ export class BasicExample {
         this.ecs = ecs;
         this.ui = ui;
         // Create HUD
+        console.log('📊 Creating HUD...');
         ui.createHUD();
         // Set up camera
+        console.log('📷 Setting up camera...');
         this.setupCamera();
         // Add lighting
+        console.log('💡 Setting up lighting...');
         this.setupLighting();
         // Create basic scene objects
+        console.log('🎯 Creating scene objects...');
         await this.createSceneObjects();
         // Set up input handling
+        console.log('⌨️ Setting up input handling...');
         this.setupInput();
         // Create ECS entities
+        console.log('🧩 Creating ECS entities...');
         this.createECSEntities();
-        console.log('Basic example initialized');
-        // Start update loop for HUD and other systems
-        this.engine.systems.time.start();
-        this.update();
-    }
-    update() {
-        const { time, ui, scene } = this.engine.systems;
-        // Update HUD with current FPS
-        ui.updateHUD(time.fps);
-        // Update scene
-        scene.update();
-        // Continue updating
-        requestAnimationFrame(() => this.update());
+        console.log('✅ Basic example initialized');
+        console.log('📝 Note: HUD and scene updates will be handled by the main engine game loop');
     }
     setupCamera() {
         const { scene } = this.engine.systems;
@@ -223,6 +219,8 @@ export class BasicExample {
             if (this.cube) {
                 this.ecs.addComponent(entity.id, new VisualComponent(this.cube.object3D));
             }
+        }).catch(error => {
+            console.warn('⚠️ Failed to load ECS components:', error);
         });
     }
     moveCamera(x, y, z) {

@@ -39,6 +39,10 @@ export class BasicExample {
     console.log('📊 Creating HUD...');
     ui.createHUD();
 
+    // Create help overlay
+    console.log('📖 Creating help overlay...');
+    this.createHelpOverlay();
+
     // Set up camera
     console.log('📷 Setting up camera...');
     this.setupCamera();
@@ -58,6 +62,11 @@ export class BasicExample {
     // Create ECS entities
     console.log('🧩 Creating ECS entities...');
     this.createECSEntities();
+
+    // Show welcome message
+    setTimeout(() => {
+      this.showWelcomeMessage();
+    }, 1000);
 
     console.log('✅ Basic example initialized');
     console.log('📝 Note: HUD and scene updates will be handled by the main engine game loop');
@@ -338,5 +347,106 @@ export class BasicExample {
         body.body.velocity.y = 10;
       }
     }
+  }
+
+  private createHelpOverlay(): void {
+    // Create help panel
+    const helpPanel = this.ui.createElement({
+      id: 'help-panel',
+      type: 'panel',
+      x: 10,
+      y: 10,
+      width: 250,
+      style: {
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        border: '2px solid #00ff00',
+        borderRadius: '10px',
+        padding: '15px',
+        color: 'white',
+        fontSize: '14px',
+        fontFamily: 'monospace',
+        pointerEvents: 'auto',
+      },
+    });
+
+    // Title
+    this.ui.createElement({
+      id: 'help-title',
+      type: 'text',
+      x: 20,
+      y: 20,
+      text: '🎮 GAME ENGINE CONTROLS',
+      style: {
+        color: '#00ff00',
+        fontSize: '16px',
+        fontWeight: 'bold',
+        fontFamily: 'monospace',
+        pointerEvents: 'none',
+      },
+    });
+
+    // Controls list
+    const controls = [
+      'W/A/S/D - Move camera',
+      'SPACE - Make cube jump',
+      'Mouse Click - Lock camera',
+      'ESC - Release camera',
+      'H - Toggle this help',
+    ];
+
+    controls.forEach((control, index) => {
+      this.ui.createElement({
+        id: `help-control-${index}`,
+        type: 'text',
+        x: 20,
+        y: 50 + index * 20,
+        text: control,
+        style: {
+          color: '#ffffff',
+          fontSize: '12px',
+          fontFamily: 'monospace',
+          pointerEvents: 'none',
+        },
+      });
+    });
+
+    // Status indicator
+    this.ui.createElement({
+      id: 'status-indicator',
+      type: 'text',
+      x: 20,
+      y: 170,
+      text: '✅ Engine Running',
+      style: {
+        color: '#00ff00',
+        fontSize: '12px',
+        fontFamily: 'monospace',
+        pointerEvents: 'none',
+      },
+    });
+
+    // Add toggle help action
+    this.input.registerAction({
+      name: 'toggle_help',
+      type: 'keyboard',
+      inputs: ['KeyH'],
+      callback: () => {
+        const panel = this.ui.getElement('help-panel');
+        if (panel) {
+          if (panel.visible) {
+            panel.hide();
+          } else {
+            panel.show();
+          }
+        }
+      }
+    });
+  }
+
+  private showWelcomeMessage(): void {
+    this.ui.showNotification(
+      '🎮 Welcome to the Game Engine! Press H to toggle help',
+      5000
+    );
   }
 }

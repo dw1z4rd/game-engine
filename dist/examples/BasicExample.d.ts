@@ -16,7 +16,6 @@ export declare class BasicExample {
      * Initialize the example
      */
     initialize(): Promise<void>;
-    private update;
     private setupCamera;
     private setupLighting;
     private createSceneObjects;

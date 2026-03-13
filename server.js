@@ -2,7 +2,7 @@ import { serve } from 'bun';
 import { file } from 'bun';
 
 serve({
-  port: 3000,
+  port: 3001,
   async fetch(req) {
     const url = new URL(req.url);
     
@@ -121,6 +121,6 @@ serve({
   },
 });
 
-console.log('🎮 Game Engine dev server running at http://localhost:3000');
+console.log('🎮 Game Engine dev server running at http://localhost:3001');
 console.log('📁 Serving files from: ./ and ./dist/');
 console.log('🔧 TypeScript files supported for development');

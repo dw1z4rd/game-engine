@@ -98,6 +98,10 @@ export declare class AudioEngine {
      */
     initialize(): Promise<void>;
     /**
+     * Resume audio context (call after user interaction)
+     */
+    resumeContext(): Promise<void>;
+    /**
      * Load a sound from URL
      */
     loadSound(name: string, url: string, config?: SoundConfig): Promise<AudioSound>;
