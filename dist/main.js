@@ -26306,18 +26306,22 @@ class InputManager {
     return document.pointerLockElement === this.domElement;
   }
   setupKeyboardEvents() {
+    console.log("\uD83D\uDD27 Setting up keyboard event listeners...");
     const handleKeyDown = (event) => {
       const key = event.code.toLowerCase();
+      console.log(`⌨️ Key down: ${key} (${event.code})`);
       this.keyboard[key] = true;
       this.triggerAction("keyboard", key, event);
     };
     const handleKeyUp = (event) => {
       const key = event.code.toLowerCase();
+      console.log(`⌨️ Key up: ${key} (${event.code})`);
       this.keyboard[key] = false;
       this.triggerAction("keyboard", key, event);
     };
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("keyup", handleKeyUp);
+    console.log("✅ Keyboard event listeners attached to document");
     this.eventListeners.push(() => {
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("keyup", handleKeyUp);
@@ -26449,8 +26453,10 @@ class InputManager {
     }));
   }
   triggerAction(type, input, event) {
+    console.log(`\uD83C\uDFAF Triggering action: type=${type}, input=${input}, totalActions=${this.actions.size}`);
     for (const action of this.actions.values()) {
       if (action.type === type && action.inputs.includes(input)) {
+        console.log(`✅ Action matched: ${action.name} - calling callback`);
         const inputEvent = {
           type: action.name,
           timestamp: performance.now(),
@@ -34900,18 +34906,20 @@ class BasicExample {
     }
   }
   setupInput() {
+    console.log("\uD83D\uDD27 Setting up input actions...");
     this.input.registerAction({
       name: "move_forward",
       type: "keyboard",
-      inputs: ["KeyW"],
-      callback: () => {
+      inputs: ["keyw"],
+      callback: (event) => {
+        console.log("\uD83C\uDFAE W key pressed - moving forward");
         this.moveCamera(0, 0, -0.1);
       }
     });
     this.input.registerAction({
       name: "move_backward",
       type: "keyboard",
-      inputs: ["KeyS"],
+      inputs: ["keys"],
       callback: () => {
         this.moveCamera(0, 0, 0.1);
       }
@@ -34919,7 +34927,7 @@ class BasicExample {
     this.input.registerAction({
       name: "move_left",
       type: "keyboard",
-      inputs: ["KeyA"],
+      inputs: ["keya"],
       callback: () => {
         this.moveCamera(-0.1, 0, 0);
       }
@@ -34927,7 +34935,7 @@ class BasicExample {
     this.input.registerAction({
       name: "move_right",
       type: "keyboard",
-      inputs: ["KeyD"],
+      inputs: ["keyd"],
       callback: () => {
         this.moveCamera(0.1, 0, 0);
       }
@@ -34935,7 +34943,7 @@ class BasicExample {
     this.input.registerAction({
       name: "jump",
       type: "keyboard",
-      inputs: ["Space"],
+      inputs: ["space"],
       callback: () => {
         this.jumpCube();
       }
@@ -34953,7 +34961,7 @@ class BasicExample {
     this.input.registerAction({
       name: "release_camera",
       type: "keyboard",
-      inputs: ["Escape"],
+      inputs: ["escape"],
       callback: () => {
         this.input.setCursorLock(false);
       }
@@ -35091,8 +35099,9 @@ class BasicExample {
     this.input.registerAction({
       name: "toggle_help",
       type: "keyboard",
-      inputs: ["KeyH"],
+      inputs: ["keyh"],
       callback: () => {
+        console.log("\uD83D\uDD27 H key pressed - toggling help");
         const panel = this.ui.getElement("help-panel");
         if (panel) {
           if (panel.visible) {

@@ -381,10 +381,24 @@ export class PhysicsWorld {
 
     // Dispose world
     if (this.world) {
-      // Cannon.js doesn't have a dispose method, but we can clear references
+      // Clear all constraints
+      for (const constraint of this.world.constraints) {
+        if (constraint.bodyA) this.world.removeBody(constraint.bodyA);
+        if (constraint.bodyB) this.world.removeBody(constraint.bodyB);
+      }
+      
+      // Clear all contact materials
+      for (const contactMaterial of this.world.contactmaterials) {
+        this.world.removeContactMaterial(contactMaterial);
+      }
+      
+      // Clear arrays and references
       this.world.bodies.length = 0;
       this.world.constraints.length = 0;
       this.world.contactmaterials.length = 0;
+      this.world.defaultContactMaterial = null as any;
+      this.world.solver = null as any;
+      this.world.broadphase = null as any;
       this.world = null;
     }
 

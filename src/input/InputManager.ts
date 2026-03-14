@@ -274,20 +274,25 @@ export class InputManager {
   }
 
   private setupKeyboardEvents(): void {
+    console.log('🔧 Setting up keyboard event listeners...');
+    
     const handleKeyDown = (event: KeyboardEvent) => {
       const key = event.code.toLowerCase();
+      console.log(`⌨️ Key down: ${key} (${event.code})`);
       this.keyboard[key] = true;
       this.triggerAction('keyboard', key, event);
     };
 
     const handleKeyUp = (event: KeyboardEvent) => {
       const key = event.code.toLowerCase();
+      console.log(`⌨️ Key up: ${key} (${event.code})`);
       this.keyboard[key] = false;
       this.triggerAction('keyboard', key, event);
     };
 
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('keyup', handleKeyUp);
+    console.log('✅ Keyboard event listeners attached to document');
 
     this.eventListeners.push(() => {
       document.removeEventListener('keydown', handleKeyDown);
@@ -430,8 +435,11 @@ export class InputManager {
   }
 
   private triggerAction(type: string, input: string, event: Event): void {
+    console.log(`🎯 Triggering action: type=${type}, input=${input}, totalActions=${this.actions.size}`);
+    
     for (const action of this.actions.values()) {
       if (action.type === type && action.inputs.includes(input)) {
+        console.log(`✅ Action matched: ${action.name} - calling callback`);
         const inputEvent: InputEvent = {
           type: action.name,
           timestamp: performance.now(),

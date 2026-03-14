@@ -204,12 +204,15 @@ export class BasicExample {
   }
 
   private setupInput(): void {
+    console.log('🔧 Setting up input actions...');
+    
     // Register basic input actions
     this.input.registerAction({
       name: 'move_forward',
       type: 'keyboard',
-      inputs: ['KeyW'],
-      callback: () => {
+      inputs: ['keyw'],
+      callback: (event) => {
+        console.log('🎮 W key pressed - moving forward');
         this.moveCamera(0, 0, -0.1);
       }
     });
@@ -217,7 +220,7 @@ export class BasicExample {
     this.input.registerAction({
       name: 'move_backward',
       type: 'keyboard',
-      inputs: ['KeyS'],
+      inputs: ['keys'],
       callback: () => {
         this.moveCamera(0, 0, 0.1);
       }
@@ -226,7 +229,7 @@ export class BasicExample {
     this.input.registerAction({
       name: 'move_left',
       type: 'keyboard',
-      inputs: ['KeyA'],
+      inputs: ['keya'],
       callback: () => {
         this.moveCamera(-0.1, 0, 0);
       }
@@ -235,7 +238,7 @@ export class BasicExample {
     this.input.registerAction({
       name: 'move_right',
       type: 'keyboard',
-      inputs: ['KeyD'],
+      inputs: ['keyd'],
       callback: () => {
         this.moveCamera(0.1, 0, 0);
       }
@@ -244,7 +247,7 @@ export class BasicExample {
     this.input.registerAction({
       name: 'jump',
       type: 'keyboard',
-      inputs: ['Space'],
+      inputs: ['space'],
       callback: () => {
         this.jumpCube();
       }
@@ -265,7 +268,7 @@ export class BasicExample {
     this.input.registerAction({
       name: 'release_camera',
       type: 'keyboard',
-      inputs: ['Escape'],
+      inputs: ['escape'],
       callback: () => {
         this.input.setCursorLock(false);
       }
@@ -429,8 +432,9 @@ export class BasicExample {
     this.input.registerAction({
       name: 'toggle_help',
       type: 'keyboard',
-      inputs: ['KeyH'],
+      inputs: ['keyh'],
       callback: () => {
+        console.log('🔧 H key pressed - toggling help');
         const panel = this.ui.getElement('help-panel');
         if (panel) {
           if (panel.visible) {

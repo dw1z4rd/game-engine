@@ -169,16 +169,16 @@ export class Engine {
     return {
       time: this.time,
       logger: this.logger,
-      renderer: this.renderer!,
-      scene: this.scene!,
-      input: this.inputManager!,
+      renderer: this.renderer,
+      scene: this.scene,
+      input: this.inputManager,
       physics: this.physicsWorld,
       audio: this.audioEngine,
       networking: this.networkManager,
       assets: this.assetManager,
-      ecs: this.ecsWorld!,
-      ui: this.uiManager!,
-      scripting: this.scriptingSystem!,
+      ecs: this.ecsWorld,
+      ui: this.uiManager,
+      scripting: this.scriptingSystem,
     };
   }
 

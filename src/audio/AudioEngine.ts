@@ -28,13 +28,15 @@ export interface SoundConfig {
   rolloffFactor?: number;
 }
 
-  /**
-   * 3D positional audio wrapper
-   */
+/**
+ * 3D positional audio wrapper
+ */
 export class AudioSound {
   public readonly sound: any;
   public readonly name: string;
   public active = true;
+  private oscillator?: OscillatorNode;
+  private gainNode?: GainNode;
 
   constructor(name: string, sound: any) {
     this.name = name;
@@ -102,11 +104,34 @@ export class AudioSound {
   }
 
   /**
+   * Set oscillator and gain node references (for oscillator sounds)
+   */
+  setOscillatorNodes(oscillator: OscillatorNode, gainNode: GainNode): void {
+    this.oscillator = oscillator;
+    this.gainNode = gainNode;
+  }
+
+  /**
    * Dispose of the sound
    */
   dispose(): void {
     this.sound.stop();
     this.sound.disconnect();
+    
+    // Clean up oscillator nodes if they exist
+    if (this.oscillator) {
+      try {
+        this.oscillator.stop();
+        this.oscillator.disconnect();
+      } catch (error) {
+        // Oscillator might already be stopped
+      }
+    }
+    
+    if (this.gainNode) {
+      this.gainNode.disconnect();
+    }
+    
     this.active = false;
   }
 }
@@ -465,6 +490,7 @@ export class AudioEngine {
     }
 
     const audioSound = new AudioSound(name, sound);
+    audioSound.setOscillatorNodes(oscillator, gainNode);
     this.sounds.set(name, audioSound);
 
     this.logger.debug(`Oscillator sound created: ${name}`);
